@@ -377,16 +377,20 @@ class TickerBase():
 
         # earnings
         if isinstance(data.get('earnings'), dict):
-            earnings = data['earnings']['financialsChart']
-            df = _pd.DataFrame(earnings['yearly']).set_index('date')
-            df.columns = utils.camel2title(df.columns)
-            df.index.name = 'Year'
-            self._earnings['yearly'] = df
+            try:
+                earnings = data['earnings']['financialsChart']
+                df = _pd.DataFrame(earnings['yearly']).set_index('date')
+                df.columns = utils.camel2title(df.columns)
+                df.index.name = 'Year'
+                self._earnings['yearly'] = df
 
-            df = _pd.DataFrame(earnings['quarterly']).set_index('date')
-            df.columns = utils.camel2title(df.columns)
-            df.index.name = 'Quarter'
-            self._earnings['quarterly'] = df
+                df = _pd.DataFrame(earnings['quarterly']).set_index('date')
+                df.columns = utils.camel2title(df.columns)
+                df.index.name = 'Quarter'
+                self._earnings['quarterly'] = df
+            except KeyError:
+                self._earnings['yearly'] = None
+                self._earnings['quarterly'] = None
 
         self._fundamentals = True
 
